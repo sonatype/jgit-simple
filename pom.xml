@@ -56,6 +56,21 @@
 			<artifactId>org.eclipse.jgit</artifactId>
 			<version>0.6.0-SNAPSHOT</version>
 		</dependency>
+
+        <!-- used for FileUtils.copyDirectory for preparing the test environment only -->
+		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-utils</artifactId>
+			<version>1.5.6</version>
+            <scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.2</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
