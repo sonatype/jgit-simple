@@ -43,7 +43,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -65,7 +67,9 @@ public class SimpleRepositoryTest extends TestCase {
     private static final String REPO_ORIGIN = "src/test/resources/org/eclipse/jgit/test/repository";
     private static final String REPO_DEST = "target/trash/repoCopy";
 	private static final String REPO_NAME = "target/trash/simpleRepo";
-	
+
+	private Collection<SimpleRepository> reposToClose = new HashSet<SimpleRepository>();
+
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
@@ -82,7 +86,11 @@ public class SimpleRepositoryTest extends TestCase {
 
     @Override
 	protected void tearDown() throws Exception {
-		File repoDir = new File(REPO_NAME);
+    	for (SimpleRepository srep : reposToClose) {
+    		srep.close();
+    	}
+
+    	File repoDir = new File(REPO_NAME);
 		recursiveDelete(repoDir);
 
 		super.tearDown();
@@ -316,9 +324,10 @@ public class SimpleRepositoryTest extends TestCase {
 	throws URISyntaxException, IOException {
 		File repoDir = new File(REPO_NAME);
 		recursiveDelete(repoDir);
-		URIish uri = new URIish("file://" + (new File(REPO_DEST)).getAbsolutePath());
+		URIish uri = new URIish("file://" + (new File(REPO_DEST)).toURI().getPath());
 		SimpleRepository srep = SimpleRepository.clone(repoDir, "origin", uri, "master", null, null);
 		assertNotNull(srep);
+		reposToClose.add(srep);
 		return srep;
 	}
 
