@@ -155,7 +155,7 @@ public class SimpleRepositoryTest extends TestCase {
 	public void testCheckout() throws Exception {
 		SimpleRepository srep = cloneTestRepository();
 		
-		srep.checkout(null, "A", null);
+		srep.checkout(null, null, "A");
 		File testFile = new File(REPO_NAME, "master.txt");
 		assertTrue(testFile.exists());
 	}

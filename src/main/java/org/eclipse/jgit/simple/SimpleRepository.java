@@ -574,14 +574,7 @@ public class SimpleRepository {
 	throws IOException {
         Validate.isTrue(branchName != null || tagName != null, 
                 "Either branch name or tag name must not be null! branchName={0} tagName={1}", branchName, tagName);
-		
-		if (branchName != null && !Constants.HEAD.equals(branchName)) {
-		    if (!branchName.startsWith(Constants.R_HEADS)) {
-		        branchName = Constants.R_HEADS + branchName;
-		    }
-			db.writeSymref(Constants.HEAD, branchName);
-		}
-		
+				
 		ObjectId headId;
 		String refName = null;
 		
@@ -592,9 +585,17 @@ public class SimpleRepository {
             refName = Constants.R_TAGS + tagName;
 		} else {
 			headId = db.resolve(branchName);
-			refName = branchName;
+			if (branchName.startsWith(Constants.R_HEADS)) {
+			    refName = branchName; 
+			} else {
+			    refName = Constants.R_HEADS + branchName;
+			}
 		}
-		
+
+		if (refName != null && !Constants.HEAD.equals(refName)) {
+            db.writeSymref(Constants.HEAD, refName);
+        }
+
 		if (headId == null) {
 			throw new RevisionSyntaxException(refName, "cannot find head of ref");
 		}
