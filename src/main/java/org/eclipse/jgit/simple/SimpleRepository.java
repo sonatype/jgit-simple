@@ -355,9 +355,17 @@ public class SimpleRepository {
 		
 		final Transport tn = Transport.open(db, uri);
 		
+		ArrayList<RefSpec> toGet = new ArrayList<RefSpec>();
+		if (want != null) {
+		    for (String ref : want) {
+		        toGet.add(new RefSpec(ref));
+		    }
+		}
+
+		
 		FetchResult fetchResult;
 		try {
-			fetchResult = tn.fetch(monitor, null);
+			fetchResult = tn.fetch(monitor, toGet);
 		} finally {
 			tn.close();
 		}
@@ -568,6 +576,9 @@ public class SimpleRepository {
                 "Either branch name or tag name must not be null! branchName={0} tagName={1}", branchName, tagName);
 		
 		if (branchName != null && !Constants.HEAD.equals(branchName)) {
+		    if (!branchName.startsWith(Constants.R_HEADS)) {
+		        branchName = Constants.R_HEADS + branchName;
+		    }
 			db.writeSymref(Constants.HEAD, branchName);
 		}
 		
