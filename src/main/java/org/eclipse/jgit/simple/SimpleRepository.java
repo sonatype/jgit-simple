@@ -1066,7 +1066,7 @@ public class SimpleRepository {
 		for (File f : files) {
 			if (f.isDirectory()) {
 				if (!ignores.isIgnored(f)) {
-					addFiles(filesOnDisk, baseDir + f.getName() + File.separator, f);
+					addFiles(filesOnDisk, baseDir + f.getName() + '/', f);
 				}
 			} else {
 				if (!ignores.isIgnored(f)) {
